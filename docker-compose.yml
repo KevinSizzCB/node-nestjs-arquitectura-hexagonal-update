@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5439:5432'
+  #Para acceder al administrador de base de datos ir a localhost:5050
+  #El hostname/address (en gen¿neral es postgres) se obtiene haciendole inspect al contenedor de postgres, 
+  #allí la llave se encuentra en Networks.node-nestjs-arquitectura-hexagonal_default.Gateway 
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - '5050:80'
+    depends_on:
+      - db
