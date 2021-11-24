@@ -5,10 +5,9 @@ import { Repository } from 'typeorm';
 import { RepositorioUsuario } from 'src/dominio/usuario/puerto/repositorio/repositorio-usuario';
 import { Usuario } from 'src/dominio/usuario/modelo/usuario';
 import { UsuarioEntidad } from '../../entidad/usuario.entidad';
-import { UsuarioDto } from 'src/aplicacion/usuario/consulta/dto/usuario.dto';
 
 @Injectable()
-export class RepositorioUsuarioMysql implements RepositorioUsuario {
+export class RepositorioUsuPostgreSQL implements RepositorioUsuario {
   constructor(
     @InjectRepository(UsuarioEntidad)
     private readonly repositorio: Repository<UsuarioEntidad>,

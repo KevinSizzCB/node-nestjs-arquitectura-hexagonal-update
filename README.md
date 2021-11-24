@@ -8,6 +8,8 @@ El framework base de este bloque es [Nest](https://github.com/nestjs/nest); este
 
 Arquitectura que fomenta que nuestro dominio sea el núcleo de todas las capas, también conocida como puertos y adaptadores en la cual el dominio define los puertos y en las capas superiores se definen los adaptadores para desacoplar el dominio. Se divide principalmente en tres capas, **aplicación**, **dominio** e **infraestructura**
 
+![Capas de arquitectura!](./draws/arquitectura-hexagonal-ceibablock.svg)
+
 - **Infraestructura**: Capa que tiene las responsabilidades de realizar los adaptadores a los puertos definidos en el domino, exponer web services, consumir web services, realizar conexiones a bases de datos, ejecutar sentencias DML, en general todo lo que sea implementaciones de cualquier framework
 - **Aplicación**: capa encargada de enrutar los eventos entrantes de la capa de infraestructura hacía la capa del dominio, generalmente se conoce como una barrera transaccional la cual agrupa toda la invocación de un caso de uso, se pueden encontrar patrones como Fabricas, Manejadores de Comandos, Bus de eventos, etc
 - **Dominio**: representa toda la lógica de negocio de la aplicación la cual es la razón de existir del negocio. Se busca evitar el anti-patron [https://martinfowler.com/bliki/AnemicDomainModel.html](https://martinfowler.com/bliki/AnemicDomainModel.html) y favorecer el principio [https://martinfowler.com/bliki/TellDontAsk.html](https://martinfowler.com/bliki/TellDontAsk.html) en esta capa se pueden encontrar los siguientes patrones agregados, servicios de dominio, entidades, objetos de valor, repositorios (puerto), etc.
@@ -39,30 +41,31 @@ Para mayor documentación del patrón [https://martinfowler.com/bliki/CQRS.html]
 
 El bloque hace uso de [TypeORM](https://typeorm.io/#/), este provee funciones para generar migraciones vacías (en las cuales escribimos el SQL que deseamos sea ejecutado contra la base de datos), migraciones generadas desde el código (en el cual el ORM lee nuestro código y escribe la migración por nosotros); además de correr nuestras migraciones y revertir las mismas.
 
-**Nota**: El uso de esta característica requiere de una versión de NPM 5.2.0 o superior, ya que hace uso de NPX.
+**Importante**: Para la configuración de migraciones se hace uso de un archivo llamado ormconfig.js es importante colocar allí todas las credenciales para la conexión a la base de datos, de lo contrario esta no funcionará. 
 
-- `$ npx typeorm migration:create -n NombreMigracion`: Crea un archivo con dos métodos up y down, en los cuales podemos hacer uso de `QueryRunner` para crear el script SQL que necesitamos ejecutar.
-- `$ npx typeorm migration:generate -n NombreMigracion`: Genera una migración con base a nuestras entidades.
-- `$ npx typeorm migration:run`: Ejecuta nuestras migraciones. Es importante haber compilado nuestro TypeScript a JavaScript antes de correr el comando, ya que no funciona sobre archivos `.ts`, con solo iniciar el servidor mediante `$ npm start` basta.
-- `$ npx typeorm migration:revert`: Ejecuta la función `down` de la última migración ejecutada.
+- `$ yarn migration:create NombreMigracion`: Genera un build del código y crea un archivo con dos métodos up y down, en los cuales podemos hacer uso de `QueryRunner` para crear el script SQL que necesitamos ejecutar.
+- `$ yarn migration:generate NombreMigracion`: Genera un build del código y genera una migración con base a nuestras entidades.
+- `$ yarn migration:run`: Ejecuta las migraciones en la base de datos.
+- `$ yarn migration:revert`: Ejecuta la función `down` de la última migración ejecutada es decir, se devuleve una migración.
+- `$ yarn migration:drop`: Ejecuta la elminacion la última migración de la base de datos. 
 
 ## Instalación
 
 ```bash
-$ npm install
+$ yarn
 ```
 
 ## Arrancar la aplicación
 
 ```bash
 # desarrollo
-$ npm run start
+$ yarn start
 
 # modo desarrollo-vigilante (Reinicia el servidor cuando detecta cambios)
-$ npm run start:dev
+$ yarn start:dev
 
-# modo producción
-$ npm run build & npm run start:prod
+# modo producciónA las 11
+$ yarn start:prod
 ```
 
 ## Pruebas
@@ -79,18 +82,6 @@ $ npm run test
 
 # todas las pruebas con cobertura
 $ npm run test:cov
-```
-
-## Migraciones
-
-```bash
-# crear una migración
-$ npm run migrations:create [nombre de la migracion]
-#ejemplo
-$ npm run migrations:create primeraMigracion
-
-# correr una migración
-$ npm run migrations:run
 ```
 
 ## License
